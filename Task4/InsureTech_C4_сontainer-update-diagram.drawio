@@ -1,0 +1,56 @@
+<mxfile host="app.diagrams.net" modified="2025-09-20T13:38:00.000Z" agent="AI" version="22.1.0" type="device">
+  <diagram id="task4-update" name="Task4-update">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Core App -->
+        <mxCell id="core" value="core-app" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="120" y="120" width="220" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- osago-aggregator -->
+        <mxCell id="osago" value="osago-aggregator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="430" y="120" width="240" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- osago storage -->
+        <mxCell id="osago-db" value="OSAGO DB" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#cfe2f3;strokeColor=#3d85c6;" vertex="1" parent="1">
+          <mxGeometry x="430" y="250" width="160" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Insurers -->
+        <mxCell id="providers" value="Страховые (REST)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="760" y="120" width="240" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- Web/SSE -->
+        <mxCell id="webnote" value="Web ⇄ core-app: REST + SSE/WebSocket (частичные ответы)" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="230" width="270" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges with resiliency patterns -->
+        <mxCell id="e1" value="REST" style="endArrow=block;endFill=1;" edge="1" parent="1" source="core" target="osago">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="REST + RateLimit / CircuitBreaker / Retry / Timeout" style="endArrow=block;endFill=1;" edge="1" parent="1" source="osago" target="providers">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="persist state" style="endArrow=block;endFill=1;dashed=1;" edge="1" parent="1" source="osago" target="osago-db">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Notes -->
+        <mxCell id="note1" value="Идемпотентность: idempotency key per request" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="340" width="240" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="note2" value="Per-provider квоты и CB на уровне osago-aggregator" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="240" width="240" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+
