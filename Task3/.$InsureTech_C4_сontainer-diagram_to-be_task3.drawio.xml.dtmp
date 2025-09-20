@@ -1,0 +1,61 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.4 Chrome/138.0.7204.97 Electron/37.2.1 Safari/537.36" version="28.0.4">
+  <diagram id="task3-c4" name="Task3">
+    <mxGraphModel dx="3345" dy="1908" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="apigw" value="API шлюз\nRate Limiting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="370" y="-80" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="core" value="core-app\nUI/API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="360" y="70" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="agg" value="ins-product-aggregator\nREST к страховым" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="360" y="220" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="providers" value="Страховые компании (5→10)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="980" y="220" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="settlement" value="ins-comp-settlement" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="360" y="370" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="bus" value="Event Streaming (Kafka/NATS)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="240" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="topic1" value="topic: ProductUpdated/TariffUpdated" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#d6b656;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="370" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="topic2" value="topic: PolicyIssued" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#d6b656;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="-210" y="430" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="outboxAgg" value="Transactional Outbox" style="text;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+          <mxGeometry x="630" y="320" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="outboxCore" value="Transactional Outbox" style="text;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+          <mxGeometry x="600" y="120" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="endArrow=block;endFill=1;" parent="1" source="apigw" target="core" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="REST + CircuitBreaker/Timeout/Retry" style="endArrow=block;endFill=1;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="core" target="agg" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="REST fan-out + per-provider CB + rate limit" style="endArrow=block;endFill=1;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="1" source="agg" target="providers" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="publish ProductUpdated" style="endArrow=block;endFill=1;dashed=1;" parent="1" source="agg" target="bus" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="subscribe ProductUpdated" style="endArrow=block;endFill=1;dashed=1;" parent="1" source="bus" target="core" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="publish PolicyIssued" style="endArrow=block;endFill=1;dashed=1;" parent="1" source="core" target="bus" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="subscribe PolicyIssued" style="endArrow=block;endFill=1;dashed=1;" parent="1" source="bus" target="settlement" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
