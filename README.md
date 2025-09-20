@@ -1,68 +1,107 @@
-InsureTech — архитектурный проект 🏗️
+InsureTech архитектурный проект 🏗️
 
 Коротко  агрегатор страховых продуктов для B2C и B2B
-Цель  высокая доступность масштабирование отказоустойчивость и новый продукт ОСАГО
+Цель  высокая доступность масштабирование отказоустойчивость и ОСАГО онлайн
 
-Стек  Kubernetes PostgreSQL Kafka или NATS Redis Drawio GraphQL Locust Python Helm опционально
-Ветки  main как целевая и insuretech для работы
-Документация  смотри директории Task1 Task2 Task3 Task4 Task5
-
+Технологии
+• Kubernetes PostgreSQL Kafka или NATS Redis Drawio GraphQL Locust Python
+Ветки
+• main как целевая
+• insuretech для работы
+Документация
+• Task1 Task2 Task3 Task4 Task5
 
 Что внутри 📦
+• Task1  технологическая архитектура to be с мультизонным и мультирегиональным дизайном RTO 45 мин RPO 15 мин
+• Task2  автоскейлинг в Kubernetes через HPA и нагрузочное тестирование Locust
+• Task3  событийные интеграции и Transactional Outbox
+• Task4  ОСАГО онлайн сервис osago-aggregator и устойчивые вызовы
+• Task5  GraphQL для client-info схема и примеры
 
-- Task1  технологическая архитектура to be с мультизонным и мультирегиональным дизайном RTO 45 мин RPO 15 мин
-- Task2  автоскейлинг в Kubernetes через HPA и нагрузочное тестирование Locust
-- Task3  переход к событийным интеграциям и Transactional Outbox
-- Task4  дизайн ОСАГО онлайн с сервисом osago-aggregator и паттернами отказоустойчивости
-- Task5  миграция client-info на GraphQL схема и примеры запросов
+Структура проекта 🧭
+```text
+.
+├─ Task1
+│  ├─ README.md
+│  └─ InsureTech_технологическая_архитектура_to-be.drawio.xml
+├─ Task2
+│  ├─ deployment.yaml
+│  ├─ service.yaml
+│  ├─ hpa.yaml
+│  ├─ locustfile.py
+│  └─ README.md
+├─ Task3
+│  ├─ risks_and_problems.md
+│  ├─ README.md
+│  └─ InsureTech_C4_сontainer-diagram_to-be_task3.drawio.xml
+├─ Task4
+│  ├─ README.md
+│  └─ InsureTech_C4_сontainer-update-diagram.drawio.xml
+├─ Task5
+│  ├─ schema.graphql
+│  └─ README.md
+└─ pintr
+   └─ докс и библиотеки фигур для drawio
+```
 
 Быстрый старт 🚀
 
-Подготовка Windows
+Windows подготовка
+• Установи Docker Desktop и включи Kubernetes при работе с Task2
+• Установи Python 3.11 и pip
+• Установи kubectl и minikube при необходимости
 
-1. Установи Docker Desktop и включи Kubernetes если нужно для Task2
-2. Установи Python 3.11 и pip
-3. Включи kubectl и minikube для локального кластера если выполняешь Task2
+Linux подготовка 🐧
+• Установи Docker и Docker Compose
+• Установи Python 3.11 и pip
+• Установи kubectl и minikube при необходимости
 
-Подготовка Linux 🐧
-
-1. Установи Docker и Docker Compose
-2. Установи Python 3.11 и pip
-3. Установи kubectl и minikube при необходимости
-
-Task2 запуск локальных манифестов HPA
-
+Task2 запуск HPA
 Windows
-
-1. Запусти Minikube  minikube start
-2. Включи metrics-server  minikube addons enable metrics-server
-3. Применяй манифесты  kubectl apply -f Task2\deployment.yaml  kubectl apply -f Task2\service.yaml  kubectl apply -f Task2\hpa.yaml
-4. Получи URL сервиса  minikube service scaletestapp --url
-5. Запусти Locust в консоли PowerShell  python -m pip install locust  locust -f Task2\locustfile.py --host http://<URL из шага 4>
+```powershell
+minikube start
+minikube addons enable metrics-server
+kubectl apply -f Task2\deployment.yaml
+kubectl apply -f Task2\service.yaml
+kubectl apply -f Task2\hpa.yaml
+minikube service scaletestapp --url
+python -m pip install locust
+locust -f Task2\locustfile.py --host http://127.0.0.1:30080
+```
 
 Linux
-
-1. minikube start
-2. minikube addons enable metrics-server
-3. kubectl apply -f Task2/deployment.yaml  kubectl apply -f Task2/service.yaml  kubectl apply -f Task2/hpa.yaml
-4. minikube service scaletestapp --url
-5. python3 -m pip install locust  locust -f Task2/locustfile.py --host http://<URL из шага 4>
+```bash
+minikube start
+minikube addons enable metrics-server
+kubectl apply -f Task2/deployment.yaml
+kubectl apply -f Task2/service.yaml
+kubectl apply -f Task2/hpa.yaml
+minikube service scaletestapp --url
+python3 -m pip install locust
+locust -f Task2/locustfile.py --host http://127.0.0.1:30080
+```
 
 Task5 GraphQL 📚
-
 Файлы  Task5/schema.graphql и Task5/README.md
-Можно выполнять выборочные поля и связи в одном запросе и снижать RPS
+Можно выбирать только нужные поля и связи одним запросом
+Пример
+```graphql
+query GetClient($id: ID!) {
+  client(id: $id) {
+    id
+    name
+    documents { id type number }
+    relatives { id relationType name }
+  }
+}
+```
 
 Диаграммы 🖼️
-
-Файлы drawio лежат в Task1 Task3 Task4
-
+Файлы drawio находятся в Task1 Task3 Task4
 
 Docker 🐳
+При необходимости можно добавить каталог docker для сборки окружения через compose
 
-Если нужен контейнер для тестового клиента GraphQL или нагрузочного инструмента собери через compose по месту в каталоге docker если будет добавлен в будущем
-
-Примечание
-
-- Не храни секреты в репозитории  используй переменные окружения и примеры .env.example
-- Все артефакты решения находятся в соответствующих директориях заданий
+Примечания
+• Не храни секреты в репозитории  используй переменные окружения и пример .env.example
+• Все артефакты решения лежат в директориях заданий
